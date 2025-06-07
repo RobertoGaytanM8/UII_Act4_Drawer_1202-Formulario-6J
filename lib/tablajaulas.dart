@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/details.dart';
+import 'package:myapp/details2.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MyForm extends StatefulWidget {
+  const MyForm({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _MyFormState();
+  State<MyForm> createState() => _MyFormState();
 }
 
 
-class _MyFormState extends State<HomePage> {
+class _MyFormState extends State<MyForm> {
   final _productController = TextEditingController();
   final _productDesController = TextEditingController();
 
@@ -56,7 +56,7 @@ class _MyFormState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.2,
-        title: Text("Formulario Perros"),
+        title: Text("Formulario Jaulas"),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 9, 199, 174),
         actions: <Widget>[
@@ -98,7 +98,7 @@ class _MyFormState extends State<HomePage> {
                   ),),
               ),
             ),
-             InkWell(
+            InkWell(
               onTap: (){},
               child: ListTile(
                 onTap: (){Navigator.popAndPushNamed(context, "/home");},
@@ -123,14 +123,14 @@ class _MyFormState extends State<HomePage> {
             children: [
               MyTextField(
                 myController: _productController,
-                fieldName: "Nombre del campo de Perro",
-                myIcon: Icons.pets,
+                fieldName: "Nombre del campo de jaulas",
+                myIcon: Icons.grid_on,
                 prefixIconColor: const Color.fromARGB(255, 0, 62, 218),
               ),
               const SizedBox(height: 10.0),
               MyTextField(
                 myController: _productDesController,
-                fieldName: "Informacion",
+                fieldName: "Descripción",
                 myIcon: Icons.description,
                 prefixIconColor: const Color.fromARGB(255, 0, 62, 218),
               ),

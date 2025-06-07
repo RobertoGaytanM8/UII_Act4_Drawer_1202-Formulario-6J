@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/tablajaulas.dart';
 import 'package:myapp/homepage.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
-      routes:{"/home": (context) => HomePage(),}
+      routes:{"/home": (context) => HomePage(),
+      "/tablas": (context) => MyForm(),}
     );
   }
 }
