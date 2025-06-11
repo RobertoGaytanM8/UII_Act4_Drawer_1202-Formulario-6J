@@ -12,15 +12,34 @@ class MyForm extends StatefulWidget {
 class _MyFormState extends State<MyForm> {
   final _productController = TextEditingController();
   final _productDesController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _tipoController = TextEditingController();
+  final TextEditingController _capacidadController = TextEditingController();
+  final TextEditingController _candadoController = TextEditingController();
+  final TextEditingController _tamanoController = TextEditingController();
+  final TextEditingController _comidaController = TextEditingController();
+  final TextEditingController _aguaController = TextEditingController();
 
-  final List<Map<String, String>> _products = [];
+  final List<Map<String, String>> _cages = [];
+
+  final Color baseColor = const Color.fromARGB(255, 123, 255, 226);
+  final Color darkTurquoise = const Color.fromARGB(255, 0, 172, 153);
+  final Color textColor = const Color.fromARGB(255, 10, 70, 62);
 
   @override
   void dispose() {
-    _productController.dispose();
-    _productDesController.dispose();
+    _idController.dispose();
+    _tipoController.dispose();
+    _capacidadController.dispose();
+    _candadoController.dispose();
+    _tamanoController.dispose();
+    _comidaController.dispose();
+    _aguaController.dispose();
     super.dispose();
   }
+
+  final List<Map<String, String>> _products = [];
+
 
   void _saveAndNavigate(BuildContext context) {
     if (_productController.text.isNotEmpty &&
@@ -38,7 +57,7 @@ class _MyFormState extends State<MyForm> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Details(products: _products),
+        builder: (context) => Details(products: _products, cages: [],),
       ),
     ).then((updatedProducts) {
       if (updatedProducts != null && updatedProducts is List<Map<String, String>>) {
@@ -117,54 +136,97 @@ class _MyFormState extends State<MyForm> {
           ],
         ),
       ),
-        body: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: ListView(
-            children: [
-              MyTextField(
-                myController: _productController,
-                fieldName: "Nombre del campo de jaulas",
-                myIcon: Icons.grid_on,
-                prefixIconColor: const Color.fromARGB(255, 0, 62, 218),
-              ),
-              const SizedBox(height: 10.0),
-              MyTextField(
-                myController: _productDesController,
-                fieldName: "Descripción",
-                myIcon: Icons.description,
-                prefixIconColor: const Color.fromARGB(255, 0, 62, 218),
-              ),
-              const SizedBox(height: 20.0),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(minimumSize: const Size(200, 50)),
-                onPressed: () => _saveAndNavigate(context),
-                child: Text(
-                  "Guardar".toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 9, 108),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
+         body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          children: [
+            MyTextField(fieldName: "ID", myController: _idController, myIcon: Icons.confirmation_number, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 10.0),
+            MyTextField(fieldName: "Tipo", myController: _tipoController, myIcon: Icons.category, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 10.0),
+            MyTextField(fieldName: "Capacidad", myController: _capacidadController, myIcon: Icons.group, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 10.0),
+            MyTextField(fieldName: "Candado", myController: _candadoController, myIcon: Icons.lock, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 10.0),
+            MyTextField(fieldName: "Tamaño", myController: _tamanoController, myIcon: Icons.aspect_ratio, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 10.0),
+            MyTextField(fieldName: "Comida", myController: _comidaController, myIcon: Icons.fastfood, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 10.0),
+            MyTextField(fieldName: "Agua", myController: _aguaController, myIcon: Icons.water_drop, labelColor: textColor, borderColor: darkTurquoise, focusedBorderColor: baseColor, prefixIconColor: darkTurquoise),
+            const SizedBox(height: 20.0),
+            myBtn(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  OutlinedButton myBtn(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(200, 50),
+        side: BorderSide(color: darkTurquoise, width: 2),
+      ),
+      onPressed: () async {
+        if (_idController.text.isEmpty || _tipoController.text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Por favor, complete al menos ID y Tipo")),
+          );
+          return;
+        }
+
+        final newCage = {
+          "id": _idController.text,
+          "tipo": _tipoController.text,
+          "capacidad": _capacidadController.text,
+          "candado": _candadoController.text,
+          "tamaño": _tamanoController.text,
+          "comida": _comidaController.text,
+          "agua": _aguaController.text,
+        };
+
+        _cages.add(newCage);
+
+        final updatedList = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Details(cages: _cages, products: [],)),
+        );
+
+        if (updatedList != null) {
+          setState(() {
+            _cages
+              ..clear()
+              ..addAll(List<Map<String, String>>.from(updatedList));
+          });
+        }
+      },
+      child: Text(
+        "Enviar".toUpperCase(),
+        style: TextStyle(fontWeight: FontWeight.bold, color: darkTurquoise),
+      ),
+    );
   }
 }
 
 class MyTextField extends StatelessWidget {
-  MyTextField({
-    Key? key,
-    required this.fieldName,
-    required this.myController,
-    this.myIcon = Icons.verified_user_outlined,
-    this.prefixIconColor = Colors.blueAccent,
-  });
-
   final TextEditingController myController;
   final String fieldName;
   final IconData myIcon;
   final Color prefixIconColor;
+  final Color borderColor;
+  final Color focusedBorderColor;
+  final Color labelColor;
+
+  const MyTextField({
+    Key? key,
+    required this.fieldName,
+    required this.myController,
+    this.myIcon = Icons.input,
+    this.prefixIconColor = Colors.blueAccent,
+    this.borderColor = Colors.blueAccent,
+    this.focusedBorderColor = Colors.blue,
+    this.labelColor = Colors.black,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -173,12 +235,12 @@ class MyTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: fieldName,
         prefixIcon: Icon(myIcon, color: prefixIconColor),
-        border: const OutlineInputBorder(),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Color.fromARGB(255, 93, 0, 255)),
-        ),
-        labelStyle: const TextStyle(color: Color.fromARGB(255, 0, 53, 106)),
+        border: OutlineInputBorder(borderSide: BorderSide(color: borderColor)),
+        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: borderColor)),
+        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: focusedBorderColor, width: 2)),
+        labelStyle: TextStyle(color: labelColor),
       ),
+      style: TextStyle(color: labelColor),
     );
   }
 }
